@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="module_wordcount" default="compile.module.wordcount">
+  <dirname property="module.wordcount.basedir" file="${ant.file.module_wordcount}"/>
+  
+  <property name="module.jdk.home.wordcount" value="${project.jdk.home}"/>
+  <property name="module.jdk.bin.wordcount" value="${project.jdk.bin}"/>
+  <property name="module.jdk.classpath.wordcount" value="${project.jdk.classpath}"/>
+  
+  <property name="compiler.args.wordcount" value="-encoding UTF-8 -source 1.6 ${compiler.args}"/>
+  
+  <property name="wordcount.output.dir" value="${module.wordcount.basedir}/out/production/wordCount"/>
+  <property name="wordcount.testoutput.dir" value="${module.wordcount.basedir}/out/test/wordCount"/>
+  
+  <path id="wordcount.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="wordcount.module.production.classpath">
+    <path refid="${module.jdk.classpath.wordcount}"/>
+  </path>
+  
+  <path id="wordcount.runtime.production.module.classpath">
+    <pathelement location="${wordcount.output.dir}"/>
+  </path>
+  
+  <path id="wordcount.module.classpath">
+    <path refid="${module.jdk.classpath.wordcount}"/>
+    <pathelement location="${wordcount.output.dir}"/>
+  </path>
+  
+  <path id="wordcount.runtime.module.classpath">
+    <pathelement location="${wordcount.testoutput.dir}"/>
+    <pathelement location="${wordcount.output.dir}"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.wordcount">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.wordcount">
+    <patternset refid="excluded.from.module.wordcount"/>
+  </patternset>
+  
+  <path id="wordcount.module.sourcepath">
+    <dirset dir="${module.wordcount.basedir}">
+      <include name="src"/>
+    </dirset>
+  </path>
+  
+  
+  <target name="compile.module.wordcount" depends="compile.module.wordcount.production,compile.module.wordcount.tests" description="Compile module wordCount"/>
+  
+  <target name="compile.module.wordcount.production" depends="register.custom.compilers" description="Compile module wordCount; production classes">
+    <mkdir dir="${wordcount.output.dir}"/>
+    <javac2 destdir="${wordcount.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.wordcount}/javac">
+      <compilerarg line="${compiler.args.wordcount}"/>
+      <bootclasspath refid="wordcount.module.bootclasspath"/>
+      <classpath refid="wordcount.module.production.classpath"/>
+      <src refid="wordcount.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.wordcount"/>
+    </javac2>
+    
+    <copy todir="${wordcount.output.dir}">
+      <fileset dir="${module.wordcount.basedir}/src">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="compile.module.wordcount.tests" depends="register.custom.compilers,compile.module.wordcount.production" description="compile module wordCount; test classes" unless="skip.tests"/>
+  
+  <target name="clean.module.wordcount" description="cleanup module">
+    <delete dir="${wordcount.output.dir}"/>
+    <delete dir="${wordcount.testoutput.dir}"/>
+  </target>
+</project>

@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="productWise">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/out/artifacts/totalSales_jar2/productWise.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
